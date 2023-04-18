@@ -1,0 +1,117 @@
+name: Renovate
+on:
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: Enable debug mode
+        type: boolean
+        default: false
+        required: false
+      renovate_config:
+        description: Name of the renovate configuration to run
+        type: string
+        required: true
+      github_pat_token:
+        description: GitHub access token
+        type: string
+        required: false
+      ghcr_pat_token:
+        description: GitHub Container Registry token
+        type: string
+        required: false
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+
+      - name: Load configuration
+        id: load_configuration
+        run: |
+          file=".github/workflows/renovate-${{ inputs.renovate_config }}.json"
+          echo "file=${file}" >> "${GITHUB_OUTPUT}"
+          echo "json<<EOF" >> "${GITHUB_OUTPUT}"
+          jq < "${file}" >> "${GITHUB_OUTPUT}"
+          echo "EOF" >> "${GITHUB_OUTPUT}"
+
+################################################################################
+
+      - name: Get renovatebot/github-action token from App
+        id: get_github_pat_token_from_app
+        if: ${{ !inputs.github_pat_token }}
+        uses: tibdex/github-app-token@v1
+        with:
+          private_key: '${{ secrets.RENOVATE_TOKEN }}'
+          app_id: '${{ secrets.RENOVATE_APPID }}'
+
+      - name: Get renovatebot/github-action token from user
+        id: get_github_pat_token_from_user
+        if: ${{ !!inputs.github_pat_token }}
+        run: |
+          echo "token=${{ inputs.github_pat_token }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set renovatebot/github-action token
+        id: set_renovatebot_github_pat_token
+        run: |
+          if [ -n "${{ steps.get_github_pat_token_from_user.outputs.token }}" ] ; then
+            token="${{ steps.get_github_pat_token_from_user.outputs.token }}"
+          else
+            token="${{ steps.get_github_pat_token_from_app.outputs.token }}"
+          fi
+          if [ -z "${token}" ] ; then
+            echo "::error::Missing renovatebot/github-action token"
+            exit 1
+          fi
+          echo "token=${token}" >> "${GITHUB_OUTPUT}"
+
+################################################################################
+
+      - name: Get ghcr token from App
+        id: get_ghcr_pat_token_from_app
+        if: ${{ !inputs.ghcr_pat_token }}
+        uses: tibdex/github-app-token@v1
+        with:
+          private_key: '${{ secrets.GHCR_TOKEN }}'
+          app_id: '${{ secrets.GHCR_APPID }}'
+
+      - name: Get ghcr token from user
+        id: get_ghcr_pat_token_from_user
+        if: ${{ !!inputs.ghcr_pat_token }}
+        run: |
+          echo "token=${{ inputs.ghcr_pat_token }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set ghcr token
+        id: set_ghcr_pat_token
+        run: |
+          if [ -n "${{ steps.get_ghcr_pat_token_from_user.outputs.token }}" ] ; then
+            token="${{ steps.get_ghcr_pat_token_from_user.outputs.token }}"
+          else
+            token="${{ steps.get_ghcr_pat_token_from_app.outputs.token }}"
+          fi
+          if [ -z "${token}" ] ; then
+            echo "::error::Missing ghcr token"
+            exit 1
+          fi
+          echo "token=${token}" >> "${GITHUB_OUTPUT}"
+
+################################################################################
+
+      - name: Renovate ${{ inputs.renovate_config }}
+        uses: renovatebot/github-action@v34.157.1
+        with:
+          configurationFile: ${{ steps.load_configuration.outputs.file }}
+          token: ${{ steps.set_renovatebot_github_pat_token.outputs.token }}
+        env:
+          LOG_LEVEL: ${{ fromJSON('["warn", "debug"]')[inputs.debug] }}
+          RENOVATE_DRY_RUN: ${{ fromJSON('[null, "full"]')[inputs.debug] }}
+          RENOVATE_HOST_RULES: |
+            [
+              {
+                  "hostType": "docker"
+                , "matchHost": "${{ fromJSON(steps.load_configuration.outputs.json).registries[0] }}"
+                , "username": "00000000-0000-0000-0000-000000000000"
+                , "password": "${{ steps.set_ghcr_pat_token.outputs.token }}"
+              }
+            ]

@@ -1,0 +1,50 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:base",
+        ":semanticCommits"
+    ],
+    "onboarding": false,
+    "dependencyDashboard": false,
+    "requireConfig": "ignored",
+    "azure-pipelines": {
+        "enabled": true
+    },
+    "prConcurrentLimit": 5,
+    "username": "RenovateBot",
+    "gitAuthor": "Renovate Bot<RenovateBot@users.noreply.github.enterprise.com>",
+    "repositories": [
+        "dgeelen-uipath/renovate-reproduction-repo-21251"
+    ],
+    "registries": [
+        "ghcr.io/dgeelen-uipath"
+    ],
+    "platform": "github",
+    "vulnerabilityAlerts": {
+        "enabled": false
+    },
+    "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{configDescription}}}{{{footer}}}",
+    "baseBranches": ["feature/test"],
+    "enabledManagers": [
+        "regex"
+    ],
+    "regexManagers": [{
+            "fileMatch": ["^docker-images.json$"],
+            "matchStringsStrategy": "recursive",
+            "matchStrings": [
+                "\"product-name\"\\s*:\\s*\\[[^]]*]",
+                "\"product-name(-component)?:[^\"]*\"",
+                "\"(?<depName>[^\"]+):(?<currentValue>[^\"]+)\""
+            ],
+            "registryUrlTemplate": "https://ghcr.io/dgeelen-uipath",
+            "datasourceTemplate": "docker"
+        }
+    ],
+    "packageRules": [{
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "enabled": false
+        }
+    ]
+}
