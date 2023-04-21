@@ -1,0 +1,13 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["github>dgeelen-uipath/renovate-reproduction-repo-21251//.github/workflows/renovate-product"],
+	"hostRules": [{
+			"hostType": "docker",
+			"matchHost": "ghcr.io",
+			"username": "dgeelen-uipath",
+			"encrypted": {
+				"password": "wcFMA/xDdHCJBTolAQ/9GFm0b3ZaydMeLSalyOBKfCYqDiqR7JnrC68yZLtyGPTIOhZ8ZZ/Ye/30tD4u2WSiTewh+Y2/6qqKq7F/fmW1MkSyWsgKP+Fc0t1wNn9JbqAsZrjd+Z2z3xNj2RqskSMvQqF04bt7YEohZc1r5SV3cQ1ZUA165syJquDdRWomElYpatWKGukboel8Ds8HYmu8yqYUmufKLVQMyznB3vWbkcb2WymTjMTI10vH/plUdnpfbJp2pdCAC2Cmbc2cg6sBCPGs2cpij0KEpeFsjVc+V1I3A5VwrfFA8kqboz84coEE0N1JaeKYBU1ydXlgaRDFBTqJ4Ud3cZlRLaXzdjFUtxH3pOIvnDUEKBbSWAjcpGtwhQNwu421jCjrQZSLNC7Ep8Gzo4S/8iFTQ8oahIdW/i8AumC0FPl2aifQydueov/sqba/tAVjRjnOFELyU6Ogkb4BZGA9P9FtC/1LyAnlXHX1f6fEHdo1zWDylap+pZGaXeO7pDXEYFd+9fd97L8teBruKAsUhmWHAA8hpVIui2XOn4HBVMBp/9Bx/HakErg2zs9wFmntzEyQwATD6nCuu/E6YHHK8SaK3FFuNYOprosCb78Zo6tDbolt9rbo3cUTRg313/jlvjc3pCJ9OkHIGOYx9DOuMKGNK2Az4lC90VwHHFLDFh8QmQ5P0R30DvzSnQEHDaxFDzP5Zvtedd5iRhg7I07Us/DJeTvvQhJV/UnC1OuhV30mBVbiidXxky6cZVKJVJWy/oAD8aTShuWnMNLncmKhZueGxRKNgzC2nQW09KWlsy/at47spJuRfAlXhY6x+YuYTZxz8Xkr+orlN0fe30CqiQTpQYR5hEtGWNY+om7VKP8K3xQLzQLC7jvO0ECD2LnY7xosdyegNQ0"
+			}
+		}
+	]
+}
