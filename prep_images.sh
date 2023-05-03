@@ -1,6 +1,10 @@
 #!/bin/sh -e
 # assuming docker login ghcr.io --username dgeelen-uipath --password-stdin
 
+(
+info "Switching to '${0%/*}'"
+cd "${0%/*}"
+
 for repository in product-name product-name-component ; do
 	docker image ls \
 		--all \
@@ -43,3 +47,4 @@ push_and_tag "${id}" product-name-component-one \
 push_and_tag "${id}" product-name-component-two \
 	5.6.7-foo.{1..48} \
 	5.5.5-foo.78
+)
