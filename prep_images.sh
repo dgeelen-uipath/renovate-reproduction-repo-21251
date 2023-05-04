@@ -1,10 +1,15 @@
 #!/bin/sh -e
 # assuming docker login ghcr.io --username dgeelen-uipath --password-stdin
 
+info() {
+	echo "> ${*}" >&2
+}
+
 (
 info "Switching to '${0%/*}'"
 cd "${0%/*}"
 
+info "Removing existing images..."
 for repository in product-name product-name-component ; do
 	docker image ls \
 		--all \
@@ -18,13 +23,16 @@ done \
 	docker image rmi --force "${id}"
 done
 
+info "Building sample image..."
 docker build --rm --tag sample .
 sample_id=$(docker images --quiet sample)
+info "Sample image id: ${sample_id}"
 
 push_and_tag() {
 	local id=${1} ; shift
 	local name=${1} ; shift
 
+	info "Pushing and tagging ${name}:${version}"
 	while [ $# -gt 0 ] ; do
 		version=${1}
 		docker tag "${id}" "ghcr.io/dgeelen-uipath/${name}:${version}"
