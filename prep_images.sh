@@ -45,7 +45,7 @@ push_and_tag "${sample_id}" product-name \
 	1.0.0
 push_and_tag "${sample_id}" product-name-component-one \
 	0.1.2 \
-	2.3.4 \
+	2.3.3 \
 	2.3.4-foo.2 \
 	2.3.4-foo.{8..12} \
 	2.3.4-foo.42 \
