@@ -19,8 +19,7 @@ done \
 done
 
 docker build --rm --tag sample .
-id=$(docker images --quiet sample)
-echo "id: ${id}"
+sample_id=$(docker images --quiet sample)
 
 push_and_tag() {
 	local id=${1} ; shift
@@ -34,16 +33,16 @@ push_and_tag() {
 	done
 }
 
-push_and_tag "${id}" product-name \
+push_and_tag "${sample_id}" product-name \
 	1.0.0
-push_and_tag "${id}" product-name-component-one \
+push_and_tag "${sample_id}" product-name-component-one \
 	0.1.2 \
 	2.3.4 \
 	2.3.4-foo.2 \
 	2.3.4-foo.{8..12} \
 	2.3.4-foo.42 \
 	200.3.4
-push_and_tag "${id}" product-name-component-two \
+push_and_tag "${sample_id}" product-name-component-two \
 	5.6.7-foo.{1..48} \
 	5.5.5-foo.78
 )
