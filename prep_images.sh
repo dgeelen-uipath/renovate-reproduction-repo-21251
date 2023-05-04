@@ -34,7 +34,6 @@ push_and_tag() {
 	done
 }
 
-id=7b156c595a0f
 push_and_tag "${id}" product-name \
 	1.0.0
 push_and_tag "${id}" product-name-component-one \
