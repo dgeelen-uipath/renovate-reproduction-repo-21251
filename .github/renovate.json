@@ -1,6 +1,7 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": ["github>dgeelen-uipath/renovate-reproduction-repo-21251//.github/workflows/renovate-product"],
+	"schedule": ["never"],
 	"hostRules": [{
 			"hostType": "docker",
 			"matchHost": "ghcr.io",
